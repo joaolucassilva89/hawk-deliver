@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="user_" character_set="utf8" collate="utf8_general_ci">
+    <!-- tables -->
+    <tables>
+        <!-- users -->
+        <table name="users" primary="user_id">
+            <fields>
+                <field column="user_id" type="BIGINT" length="20" extra="auto_increment"/>
+                <field column="active" type="TINYINT" length="1" default="0"/>
+                <field column="created_at" type="DATETIME"/>
+                <field column="email" type="VARCHAR" length="255"/>
+                <field column="password" type="CHAR" length="40"/>
+                <field column="password_salt" type="CHAR" length="40"/>
+                <field column="token_verification" type="CHAR" length="40"/>
+                <field column="username" type="VARCHAR" length="15"/>
+            </fields>
+        </table>
+    </tables>
+</database>

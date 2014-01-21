@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    
+    <!-- Field types -->
+    <xs:simpleType name="type">
+        <xs:restriction base="xs:string">
+            <!--numeric-->
+            <xs:enumeration value="TINYINT"/>
+            <xs:enumeration value="SMALLINT"/>
+            <xs:enumeration value="MEDIUMINT"/>
+            <xs:enumeration value="INT"/>
+            <xs:enumeration value="BIGINT"/>
+            <xs:enumeration value="DECIMAL"/>
+            <xs:enumeration value="FLOAT"/>
+            <xs:enumeration value="DOUBLE"/>
+            <xs:enumeration value="REAL"/>
+            <xs:enumeration value="BIT"/>
+            <xs:enumeration value="BOOLEAN"/>
+            <xs:enumeration value="SERIAL"/>
+            <!-- Date and Time -->
+            <xs:enumeration value="DATE"/>
+            <xs:enumeration value="DATETIME"/>
+            <xs:enumeration value="TIMESTAMP"/>
+            <xs:enumeration value="TIME"/>
+            <xs:enumeration value="YEAR"/>
+            <!-- String -->
+            <xs:enumeration value="CHAR"/>
+            <xs:enumeration value="VARCHAR"/>
+            <xs:enumeration value="TINYTEXT"/>
+            <xs:enumeration value="TEXT"/>
+            <xs:enumeration value="MEDIUMTEXT"/>
+            <xs:enumeration value="LONGTEXT"/>
+            <xs:enumeration value="BINARY"/>
+            <xs:enumeration value="VARBINARY"/>
+            <xs:enumeration value="TINYBLOB"/>
+            <xs:enumeration value="MEDIUMBLOB"/>
+            <xs:enumeration value="BLOB"/>
+            <xs:enumeration value="LONGBLOB"/>
+            <xs:enumeration value="ENUM"/>
+            <xs:enumeration value="SET"/>
+            <!-- Spatial -->
+            <xs:enumeration value="GEOMETRY"/>
+            <xs:enumeration value="POINT"/>
+            <xs:enumeration value="LINESTRING"/>
+            <xs:enumeration value="POLYGON"/>
+            <xs:enumeration value="MULTIPOINT"/>
+            <xs:enumeration value="MULTILINESTRING"/>
+            <xs:enumeration value="MULTIPOLYGON"/>
+            <xs:enumeration value="GEOMETRYCOLLECTION"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!---->
+    <xs:simpleType name="extra">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="auto_increment" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!---->
+    <xs:attributeGroup name="structure">
+        <xs:attribute name="column" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="type" use="required"/>
+        <xs:attribute name="length" type="xs:positiveInteger" use="optional"/>
+        <xs:attribute name="collation" type="collation" use="optional"/>
+        <xs:attribute name="default" type="xs:string" use="optional"/>
+        <xs:attribute name="null" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="YES|NO" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="extra" type="extra" use="optional"/>
+        <xs:attribute name="comments" type="xs:string" use="optional"/>
+        <xs:attribute name="primary" type="xs:boolean" use="optional"/>
+        <xs:attribute name="index" type="xs:boolean" use="optional"/>
+        <xs:attribute name="unique" type="xs:boolean" use="optional"/>
+    </xs:attributeGroup>
+    
+    <!-- Field collations -->
+    <xs:simpleType name="collation">
+        <xs:restriction base="xs:string">
+            <!--ARMSCII-8 Armenian-->
+            <xs:enumeration value="armscii8_bin"/>
+            <xs:enumeration value="armscii8_general_ci"/>
+            <!--US ASCII-->
+            <xs:enumeration value="ascii_bin"/>
+            <xs:enumeration value="ascii_general_ci"/>
+            <!--Big5 Traditional Chinese-->
+            <xs:enumeration value="big5_bin"/>
+            <xs:enumeration value="big5_chinese_ci"/>
+            <!--Binary pseudo charset-->
+            <xs:enumeration value="binary"/>
+            <!--Windows Central European-->
+            <xs:enumeration value="cp1250_bin"/>
+            <xs:enumeration value="cp1250_croatian_ci"/>
+            <xs:enumeration value="cp1250_czech_cs"/>
+            <xs:enumeration value="cp1250_general_ci"/>
+            <xs:enumeration value="cp1250_polish_ci"/>
+            <!--Windows Cyrillic-->
+            <xs:enumeration value="cp1251_bin"/>
+            <xs:enumeration value="cp1251_bulgarian_ci"/>
+            <xs:enumeration value="cp1251_general_ci"/>
+            <xs:enumeration value="cp1251_general_cs"/>
+            <xs:enumeration value="cp1251_ukrainian_ci"/>
+            <!--Windows Arabic-->
+            <xs:enumeration value="cp1256_bin"/>
+            <xs:enumeration value="cp1256_general_ci"/>
+            <!--Windows Baltic-->
+            <xs:enumeration value="cp1257_bin"/>
+            <xs:enumeration value="cp1257_general_ci"/>
+            <xs:enumeration value="cp1257_lithuanian_ci"/>
+            <!--DOS West European-->
+            <xs:enumeration value="cp850_bin"/>
+            <xs:enumeration value="cp850_general_ci"/>
+            <!--DOS Central European-->
+            <xs:enumeration value="cp852_bin"/>
+            <xs:enumeration value="cp852_general_ci"/>
+            <!--DOS Russian-->
+            <xs:enumeration value="cp866_bin"/>
+            <xs:enumeration value="cp866_general_ci"/>
+            <!--SJIS for Windows Japanese-->
+            <xs:enumeration value="cp932_bin"/>
+            <xs:enumeration value="cp932_japanese_ci"/>
+            <!--DEC West European-->
+            <xs:enumeration value="dec8_bin"/>
+            <xs:enumeration value="dec8_swedish_ci"/>
+            <!--UJIS for Windows Japanese-->
+            <xs:enumeration value="eucjpms_bin"/>
+            <xs:enumeration value="eucjpms_japanese_ci"/>
+            <!--EUC-KR Korean-->
+            <xs:enumeration value="euckr_bin"/>
+            <xs:enumeration value="euckr_korean_ci"/>
+            <!--GB2312 Simplified Chinese-->
+            <xs:enumeration value="gb2312_bin"/>
+            <xs:enumeration value="gb2312_chinese_ci"/>
+            <!--GBK Simplified Chinese-->
+            <xs:enumeration value="gbk_bin"/>
+            <xs:enumeration value="gbk_chinese_ci"/>
+            <!--GEOSTD8 Georgian-->
+            <xs:enumeration value="geostd8_bin"/>
+            <xs:enumeration value="geostd8_general_ci"/>
+            <!--ISO 8859-7 Greek-->
+            <xs:enumeration value="greek_bin"/>
+            <xs:enumeration value="greek_general_ci"/>
+            <!--ISO 8859-8 Hebrew-->
+            <xs:enumeration value="hebrew_bin"/>
+            <xs:enumeration value="hebrew_general_ci"/>
+            <!--HP West European-->
+            <xs:enumeration value="hp8_bin"/>
+            <xs:enumeration value="hp8_english_ci"/>
+            <!--DOS Kamenicky Czech-Slovak-->
+            <xs:enumeration value="keybcs2_bin"/>
+            <xs:enumeration value="keybcs2_general_ci"/>
+            <!--KOI8-R Relcom Russian-->
+            <xs:enumeration value="koi8r_bin"/>
+            <xs:enumeration value="koi8r_general_ci"/>
+            <!--KOI8-U Ukrainian-->
+            <xs:enumeration value="koi8u_bin"/>
+            <xs:enumeration value="koi8u_general_ci"/>
+            <!--cp1252 West European-->
+            <xs:enumeration value="latin1_bin"/>
+            <xs:enumeration value="latin1_danish_ci"/>
+            <xs:enumeration value="latin1_general_ci"/>
+            <xs:enumeration value="latin1_general_cs"/>
+            <xs:enumeration value="latin1_german1_ci"/>
+            <xs:enumeration value="latin1_german2_ci"/>
+            <xs:enumeration value="latin1_spanish_ci"/>
+            <xs:enumeration value="latin1_swedish_ci"/>
+            <!--ISO 8859-2 Central European-->
+            <xs:enumeration value="latin2_bin"/>
+            <xs:enumeration value="latin2_croatian_ci"/>
+            <xs:enumeration value="latin2_czech_cs"/>
+            <xs:enumeration value="latin2_general_ci"/>
+            <xs:enumeration value="latin2_hungarian_ci"/>
+            <!--ISO 8859-9 Turkish-->
+            <xs:enumeration value="latin5_bin"/>
+            <xs:enumeration value="latin5_turkish_ci"/>
+            <!--ISO 8859-13 Baltic-->
+            <xs:enumeration value="latin7_bin"/>
+            <xs:enumeration value="latin7_estonian_cs"/>
+            <xs:enumeration value="latin7_general_ci"/>
+            <xs:enumeration value="latin7_general_cs"/>
+            <!--Mac Central European-->
+            <xs:enumeration value="macce_bin"/>
+            <xs:enumeration value="macce_general_ci"/>
+            <!--Mac West European-->
+            <xs:enumeration value="macroman_bin"/>
+            <xs:enumeration value="macroman_general_ci"/>
+            <!--Shift-JIS Japanese-->
+            <xs:enumeration value="sjis_bin"/>
+            <xs:enumeration value="sjis_japanese_ci"/>
+            <!--7bit Swedish-->
+            <xs:enumeration value="swe7_bin"/>
+            <xs:enumeration value="swe7_swedish_ci"/>
+            <!--TIS620 Thai-->
+            <xs:enumeration value="tis620_bin"/>
+            <xs:enumeration value="tis620_thai_ci"/>
+            <!--UCS-2 Unicode-->
+            <xs:enumeration value="ucs2_bin"/>
+            <xs:enumeration value="ucs2_czech_ci"/>
+            <xs:enumeration value="ucs2_danish_ci"/>
+            <xs:enumeration value="ucs2_esperanto_ci"/>
+            <xs:enumeration value="ucs2_estonian_ci"/>
+            <xs:enumeration value="ucs2_general_ci"/>
+            <xs:enumeration value="ucs2_general_mysql500_ci"/>
+            <xs:enumeration value="ucs2_hungarian_ci"/>
+            <xs:enumeration value="ucs2_icelandic_ci"/>
+            <xs:enumeration value="ucs2_latvian_ci"/>
+            <xs:enumeration value="ucs2_lithuanian_ci"/>
+            <xs:enumeration value="ucs2_persian_ci"/>
+            <xs:enumeration value="ucs2_polish_ci"/>
+            <xs:enumeration value="ucs2_roman_ci"/>
+            <xs:enumeration value="ucs2_romanian_ci"/>
+            <xs:enumeration value="ucs2_sinhala_ci"/>
+            <xs:enumeration value="ucs2_slovak_ci"/>
+            <xs:enumeration value="ucs2_slovenian_ci"/>
+            <xs:enumeration value="ucs2_spanish2_ci"/>
+            <xs:enumeration value="ucs2_spanish_ci"/>
+            <xs:enumeration value="ucs2_swedish_ci"/>
+            <xs:enumeration value="ucs2_turkish_ci"/>
+            <xs:enumeration value="ucs2_unicode_ci"/>
+            <!--EUC-JP Japanese-->
+            <xs:enumeration value="ujis_bin"/>
+            <xs:enumeration value="ujis_japanese_ci"/>
+            <!--UTF-16 Unicode-->
+            <xs:enumeration value="utf16_bin"/>
+            <xs:enumeration value="utf16_czech_ci"/>
+            <xs:enumeration value="utf16_danish_ci"/>
+            <xs:enumeration value="utf16_esperanto_ci"/>
+            <xs:enumeration value="utf16_estonian_ci"/>
+            <xs:enumeration value="utf16_general_ci"/>
+            <xs:enumeration value="utf16_hungarian_ci"/>
+            <xs:enumeration value="utf16_icelandic_ci"/>
+            <xs:enumeration value="utf16_latvian_ci"/>
+            <xs:enumeration value="utf16_lithuanian_ci"/>
+            <xs:enumeration value="utf16_persian_ci"/>
+            <xs:enumeration value="utf16_polish_ci"/>
+            <xs:enumeration value="utf16_roman_ci"/>
+            <xs:enumeration value="utf16_romanian_ci"/>
+            <xs:enumeration value="utf16_sinhala_ci"/>
+            <xs:enumeration value="utf16_slovak_ci"/>
+            <xs:enumeration value="utf16_slovenian_ci"/>
+            <xs:enumeration value="utf16_spanish2_ci"/>
+            <xs:enumeration value="utf16_spanish_ci"/>
+            <xs:enumeration value="utf16_swedish_ci"/>
+            <xs:enumeration value="utf16_turkish_ci"/>
+            <xs:enumeration value="utf16_unicode_ci"/>
+            <!--UTF-32 Unicode-->
+            <xs:enumeration value="utf32_bin"/>
+            <xs:enumeration value="utf32_czech_ci"/>
+            <xs:enumeration value="utf32_danish_ci"/>
+            <xs:enumeration value="utf32_esperanto_ci"/>
+            <xs:enumeration value="utf32_estonian_ci"/>
+            <xs:enumeration value="utf32_general_ci"/>
+            <xs:enumeration value="utf32_hungarian_ci"/>
+            <xs:enumeration value="utf32_icelandic_ci"/>
+            <xs:enumeration value="utf32_latvian_ci"/>
+            <xs:enumeration value="utf32_lithuanian_ci"/>
+            <xs:enumeration value="utf32_persian_ci"/>
+            <xs:enumeration value="utf32_polish_ci"/>
+            <xs:enumeration value="utf32_roman_ci"/>
+            <xs:enumeration value="utf32_romanian_ci"/>
+            <xs:enumeration value="utf32_sinhala_ci"/>
+            <xs:enumeration value="utf32_slovak_ci"/>
+            <xs:enumeration value="utf32_slovenian_ci"/>
+            <xs:enumeration value="utf32_spanish2_ci"/>
+            <xs:enumeration value="utf32_spanish_ci"/>
+            <xs:enumeration value="utf32_swedish_ci"/>
+            <xs:enumeration value="utf32_turkish_ci"/>
+            <xs:enumeration value="utf32_unicode_ci"/>
+            <!--UTF-8 Unicode-->
+            <xs:enumeration value="utf8_bin"/>
+            <xs:enumeration value="utf8_czech_ci"/>
+            <xs:enumeration value="utf8_danish_ci"/>
+            <xs:enumeration value="utf8_esperanto_ci"/>
+            <xs:enumeration value="utf8_estonian_ci"/>
+            <xs:enumeration value="utf8_general_ci"/>
+            <xs:enumeration value="utf8_general_mysql500_ci"/>
+            <xs:enumeration value="utf8_hungarian_ci"/>
+            <xs:enumeration value="utf8_icelandic_ci"/>
+            <xs:enumeration value="utf8_latvian_ci"/>
+            <xs:enumeration value="utf8_lithuanian_ci"/>
+            <xs:enumeration value="utf8_persian_ci"/>
+            <xs:enumeration value="utf8_polish_ci"/>
+            <xs:enumeration value="utf8_roman_ci"/>
+            <xs:enumeration value="utf8_romanian_ci"/>
+            <xs:enumeration value="utf8_sinhala_ci"/>
+            <xs:enumeration value="utf8_slovak_ci"/>
+            <xs:enumeration value="utf8_slovenian_ci"/>
+            <xs:enumeration value="utf8_spanish2_ci"/>
+            <xs:enumeration value="utf8_spanish_ci"/>
+            <xs:enumeration value="utf8_swedish_ci"/>
+            <xs:enumeration value="utf8_turkish_ci"/>
+            <xs:enumeration value="utf8_unicode_ci"/>
+            <!--UTF-8 Unicode-->
+            <xs:enumeration value="utf8mb4_bin"/>
+            <xs:enumeration value="utf8mb4_czech_ci"/>
+            <xs:enumeration value="utf8mb4_danish_ci"/>
+            <xs:enumeration value="utf8mb4_esperanto_ci"/>
+            <xs:enumeration value="utf8mb4_estonian_ci"/>
+            <xs:enumeration value="utf8mb4_general_ci"/>
+            <xs:enumeration value="utf8mb4_hungarian_ci"/>
+            <xs:enumeration value="utf8mb4_icelandic_ci"/>
+            <xs:enumeration value="utf8mb4_latvian_ci"/>
+            <xs:enumeration value="utf8mb4_lithuanian_ci"/>
+            <xs:enumeration value="utf8mb4_persian_ci"/>
+            <xs:enumeration value="utf8mb4_polish_ci"/>
+            <xs:enumeration value="utf8mb4_roman_ci"/>
+            <xs:enumeration value="utf8mb4_romanian_ci"/>
+            <xs:enumeration value="utf8mb4_sinhala_ci"/>
+            <xs:enumeration value="utf8mb4_slovak_ci"/>
+            <xs:enumeration value="utf8mb4_slovenian_ci"/>
+            <xs:enumeration value="utf8mb4_spanish2_ci"/>
+            <xs:enumeration value="utf8mb4_spanish_ci"/>
+            <xs:enumeration value="utf8mb4_swedish_ci"/>
+            <xs:enumeration value="utf8mb4_turkish_ci"/>
+            <xs:enumeration value="utf8mb4_unicode_ci"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:element name="database">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tables" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="table" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="fields">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="field" maxOccurs="unbounded" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attributeGroup ref="structure"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="primary" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="character_set" type="xs:string" use="required"/>
+            <xs:attribute name="collate" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
