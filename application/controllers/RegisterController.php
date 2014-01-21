@@ -3,7 +3,7 @@
 class RegisterController extends Zend_Controller_Action {
 
     public function init() {
-        /* Initialize action controller here */
+        $this->_helper->layout->setLayout('register');
     }
 
     public function indexAction() {
@@ -15,8 +15,7 @@ class RegisterController extends Zend_Controller_Action {
                 /* Send json output */
                 $this->_helper->json->sendJson($response);
             } catch (Exception $e) {
-                var_dump($e->getMessage());
-                exit;
+                
             }
         }
     }

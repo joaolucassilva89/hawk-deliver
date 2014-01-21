@@ -1,4 +1,164 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>Login</b> and script/action name <b>index</b></p>
-</div>
+<script>
+
+    Ext.onReady(function() {
+
+        Ext.MessageBox.show(
+                {
+                    title: 'Sucesso',
+                    msg: 'A sua foi ativada com sucesso, preencha o formulário de login para entrar na sua conta'
+                }
+        );
+
+        var Form = Ext.create('Ext.form.Panel', {
+            border: false,
+            bodyBorder: false,
+            bodyPadding: '10 10 5 10',
+            defaultType: 'textfield',
+            defaults: {
+                anchor: '100%',
+                msgTarget: 'under',
+                padding: '5px 0'
+            },
+            frame: false,
+            renderTo: Ext.getBody(),
+            style: 'margin:50 auto 0 auto;',
+            url: '/login',
+            waitMsgTarget: true,
+            width: 400,
+            items: [
+                /*Username label*/
+                {
+                    xtype: 'label',
+                    text: 'E-mail ou nome de utilizador'
+                },
+                /*Username field*/
+                {
+                    name: 'username'
+
+                },
+                /*Password label*/
+                {
+                    xtype: 'label',
+                    text: 'Palavra-passe'
+                },
+                /*Password field container*/
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            name: 'password',
+                            flex: 1,
+                            inputType: 'password',
+                            msgTarget: 'under'
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Mostrar',
+                            style: 'border-top-left-radius:0 !important;border-bottom-left-radius:0 !important;',
+                            handler: function() {
+                                return;
+                                this.setText('Esconder');
+                            }
+                        }
+                    ]
+                },
+                /*Remember*/
+                {
+                    xtype: 'checkbox',
+                    name: 'remember',
+                    boxLabel: 'Manter-me ligado'
+
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'container',
+                    dock: 'top',
+                    items: [
+                        {
+                            xtype: 'box',
+                            flex: 1,
+                            html: 'Hawk Delivery - Marketing software',
+                            padding: 10,
+                            style: 'font-size:14px;'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'container',
+                    dock: 'bottom',
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch',
+                        pack: 'start'
+                    },
+                    padding: '10',
+                    width: 400,
+                    items: [
+                        /* Create account button */
+                        {
+                            xtype: 'button',
+                            disabled: true,
+                            formBind: true,
+                            scale: 'medium',
+                            text: 'Entrar na minha conta',
+                            width: 100,
+                            handler: function() {
+                                /* Normally we would submit the form to the server here and handle the response...*/
+                                Form.submit({
+                                    clientValidation: false,
+                                    submitEmptyText: false,
+                                    waitMsg: 'Aguarde...',
+                                    success: function(form, action) {
+                                        window.location = '/';
+                                    },
+                                    failure: function(form, action) {
+                                        if (action.result.awaiting_activation) {
+                                            Ext.MessageBox.show(
+                                                    {
+                                                        title: 'Ativar conta',
+                                                        msg: 'Está conta aguarda ativação, caso não recebeu um e-mail de confirmação, contacte o nosso helpdesk.',
+                                                        icon: Ext.MessageBox.INFO
+                                                    }
+                                            );
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        /* Some space */
+                        {
+                            xtype: 'tbspacer',
+                            height: 10
+                        },
+                        {
+                            xtype: 'container',
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch',
+                                pack: 'start'
+                            },
+                            items: [
+                                {
+                                    xtype: 'box',
+                                    html: '<a href="/register">Criar uma nova conta</a>'
+                                },
+                                {
+                                    xtype: 'box',
+                                    html: '·',
+                                    padding: '0 10 0 10'
+                                },
+                                {
+                                    xtype: 'box',
+                                    html: '<a href="/forgot-password">Esqueceu a palavra-passe ?</a>'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+    });
+</script>

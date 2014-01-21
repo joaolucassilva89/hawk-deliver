@@ -23,6 +23,83 @@
     <!-- My face after catching a tan -> ☻ -->
     <!-- I really love going to the beach in the summer to get a tan on my body ☀ -->
     <body>
+
+        <script>
+            Ext.onReady(function() {
+                var Layout = Ext.create('Ext.panel.Panel', {
+                    autoShow: true,
+                    border: false,
+                    layout: 'hbox',
+                    renderTo: Ext.getBody(),
+                    items: [
+                        {
+                            xtype: 'toolbar',
+                            flex: 1,
+                            height: 60,
+                            padding: '0 10',
+                            defaults: {
+                                scale: 'medium'
+                            },
+                            items: [
+                                {
+                                    xtype: 'box',
+                                    html: '<img src="/img/logo.png" width="100">',
+                                    height: 60,
+                                    width: 120
+                                },
+                                {
+                                    xtype: 'splitbutton',
+                                    text: 'Campanhãs'
+                                },
+                                {
+                                    xtype: 'splitbutton',
+                                    text: 'Formulários'
+                                },
+                                {
+                                    xtype: 'splitbutton',
+                                    text: 'Listas'
+                                },
+                                {
+                                    xtype: 'splitbutton',
+                                    text: 'Relatórios'
+                                },
+                                {
+                                    text: 'Ajuda'
+                                },
+                                // begin using the right-justified button container
+                                '->', // same as { xtype: 'tbfill' }
+                                {
+                                    xtype: 'button',
+                                    text: 'cenas'
+                                },
+                                '-',
+                                {
+                                    xtype: 'splitbutton',
+                                    text: 'A minha conta',
+                                    menu: new Ext.menu.Menu({
+                                        border: false,
+                                        showSeparator: false,
+                                        items: [
+                                            // these will render as dropdown menu items when the arrow is clicked:
+                                            {
+                                                text: 'Alterar palavra-passe'
+                                            },
+                                            {
+                                                text: 'Sair',
+                                                handler:function() {
+                                                    window.location = '/logout';
+                                                }
+                                            }
+                                        ]
+                                    })
+                                }
+                            ]
+                        }
+                    ]
+                });
+            });
+        </script>
+
         <?php echo $this->layout()->content; ?>
     </body>
 

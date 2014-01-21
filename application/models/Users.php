@@ -1,6 +1,33 @@
 <?php
 
-class Application_Model_Users {
+class Application_Model_Users extends Zend_Db_Table {
+
+    protected $_name = 'users';
+    protected $_primary = 'user_id';
+
+    public static function confirm($username, $tokenVerification) {
+        if (!is_string($username)) {
+            throw new Exception('$username must be a type of string');
+        }
+        if (!is_string($tokenVerification)) {
+            throw new Exception('$tokenVerification must be a type of string');
+        }
+        $instance = new self;
+        $instanceRow = $instance->fetchRow(array('username = ?' => $username));
+        if (!$instanceRow) {
+            return array('success' => false, 'error' => 'INVALID_USERNAME');
+        } else {
+            if ($instanceRow->active) {
+                return array('success' => false, 'error' => 'ACCOUNT_ALREADY_ACTIVATED');
+            } else if ($instanceRow->token_verification != $tokenVerification) {
+                return array('success' => false, 'error' => 'INVALID_TOKEN_VERIFICATION');
+            } else {
+                $instanceRow->active = 1;
+                $instanceRow->save();
+                return array('success' => true);
+            }
+        }
+    }
 
     public static function create($args) {
         /**/
@@ -52,10 +79,65 @@ class Application_Model_Users {
         /**/
         if (empty($response['errors'])) {
             $response['success'] = true;
+            $instance = new self;
+            $insert = array();
+            $insert['created_at'] = date('Y-m-d H:i:s');
+            $insert['email'] = $args['email'];
+            $passwordSalt = sha1(microtime());
+            $insert['password'] = sha1($args['password'] . $passwordSalt);
+            $insert['password_salt'] = $passwordSalt;
+            $insert['token_verification'] = sha1(microtime() . microtime());
+            $insert['username'] = $args['username'];
+            $instance->insert($insert);
         } else {
             $response['success'] = false;
         }
         return $response;
+    }
+
+    public static function login($username = '', $password = '') {
+        /* Verify if username or password is empty */
+        $usernameIsEmpty = empty($username);
+        $passwordIsEmpty = empty($password);
+        if ($usernameIsEmpty || $passwordIsEmpty) {
+            $errors = array();
+            if ($usernameIsEmpty) {
+                $errors['username'] = 'Username empty';
+            }
+            if ($passwordIsEmpty) {
+                $errors['password'] = 'Password empty';
+            }
+            return array('response' => array('success' => false, 'errors' => $errors));
+        }
+        /* Auth database adapter */
+        $authAdapter = new Zend_Auth_Adapter_DbTable();
+        $authAdapter->setTableName('users');
+        $authAdapter->setIdentityColumn('username');
+        $authAdapter->setCredentialColumn('password');
+        $authAdapter->setCredentialTreatment('SHA1(CONCAT(?,password_salt))');
+        $authAdapter->setIdentity((string) $username)->setCredential((string) $password);
+        $authenticateResponse = $authAdapter->authenticate();
+        switch ($authenticateResponse->getCode()) {
+            case Zend_Auth_Result::FAILURE:
+                $response = array('success' => false, 'errors' => array());
+                break;
+            case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID:
+                $response = array('success' => false, 'errors' => array('password' => 'Invalid password'));
+                break;
+            case Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS:
+                $response = array('success' => false, 'errors' => array());
+                break;
+            case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND:
+                $response = array('success' => false, 'errors' => array('username' => 'Invalid username'));
+                break;
+            case Zend_Auth_Result::FAILURE_UNCATEGORIZED:
+                $response = array('success' => false, 'errors' => array());
+                break;
+            case Zend_Auth_Result::SUCCESS:
+                $response = array('success' => true);
+                break;
+        }
+        return array('auth_adapter' => $authAdapter, 'response' => $response);
     }
 
 }

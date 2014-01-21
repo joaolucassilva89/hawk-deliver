@@ -1,7 +1,6 @@
 <script>
 
     Ext.onReady(function() {
-        Ext.QuickTips.init();
         var Form = Ext.create('Ext.form.Panel', {
             border: false,
             bodyBorder: false,
@@ -19,53 +18,15 @@
             waitMsgTarget: true,
             width: 400,
             items: [
-                /*Username label*/
-                {
-                    xtype: 'label',
-                    text: 'Nome de utilizador'
-                },
-                /*Username field*/
-                {
-                    name: 'username'
-
-                },
                 /*E-mail abel*/
                 {
                     xtype: 'label',
                     text: 'E-mail'
                 },
-                /*E-mail field*/
+                /*E-mail textfield*/
                 {
                     name: 'email'
-                },
-                /*Password label*/
-                {
-                    xtype: 'label',
-                    text: 'Palavra-passe'
-                },
-                /*Password field container*/
-                {
-                    xtype: 'fieldcontainer',
-                    layout: 'hbox',
-                    items: [
-                        {
-                            xtype: 'textfield',
-                            name: 'password',
-                            flex: 1,
-                            inputType: 'password',
-                            msgTarget: 'under'
-                        },
-                        {
-                            xtype: 'button',
-                            text: 'Mostrar',
-                            style: 'border-top-left-radius:0 !important;border-bottom-left-radius:0 !important;',
-                            handler: function() {
-                                return;
-                                this.setText('Esconder');
-                            }
-                        }
-                    ]
-                },
+                }
             ],
             dockedItems: [
                 {
@@ -79,9 +40,9 @@
                     items: [
                         {
                             xtype: 'box',
-                            html: 'Crie uma conta, é gratis ! Se já tiver uma conta, <a href="/login">clique aqui</a>',
-                            padding:10,
-                            style:'font-size:14px;'
+                            html: 'Introduza o seu e-mail para recuperar a palavra-passe',
+                            padding: 10,
+                            style: 'font-size:14px;'
                         }
                     ]
                 },
@@ -101,7 +62,7 @@
                             disabled: true,
                             formBind: true,
                             scale: 'medium',
-                            text: 'Criar a minha conta',
+                            text: 'Recuperar palavra-passe',
                             width: 100,
                             handler: function() {
                                 /* Normally we would submit the form to the server here and handle the response...*/
@@ -122,10 +83,28 @@
                             xtype: 'tbspacer',
                             height: 10
                         },
-                        /*Terms & Conditions*/
                         {
-                            xtype: 'box',
-                            html: 'Ao clicar em "Criar conta" está a concordar com os nossos <a href="/terms-of-service" target="_blank">termos de serviço</a> e <a href="/privacy-policy">politicas de privacidade</a>.',
+                            xtype: 'container',
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch',
+                                pack: 'start'
+                            },
+                            items: [
+                                {
+                                    xtype: 'box',
+                                    html: '<a href="/register">Criar uma conta</a>'
+                                },
+                                {
+                                    xtype: 'box',
+                                    html: '·',
+                                    padding: '0 10 0 10'
+                                },
+                                {
+                                    xtype: 'box',
+                                    html: '<a href="/login">Entrar na conta</a>'
+                                }
+                            ]
                         }
                     ]
                 }]

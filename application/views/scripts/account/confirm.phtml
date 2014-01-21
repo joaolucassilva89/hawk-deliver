@@ -1,0 +1,30 @@
+<script>
+
+    var action = 'activated';
+
+    Ext.onReady(function() {
+        if (action == 'activated') {
+            Ext.create('Ext.panel.Panel',
+                    {
+                        border: false,
+                        renderTo: Ext.getBody(),
+                        items: [
+                            {
+                                
+                            }
+                        ]
+                    }
+            );
+        } else {
+            Ext.MessageBox.show(
+                    {
+                        closable: false,
+                        draggable: false,
+                        title: 'Ativar conta',
+                        msg: 'Está conta não se encontra ativa, se não recebeu o e-mail de confirmação, contacte o helpdesk. <br><br> <a href="/login">Entrar na minha conta</a> · <a href="/forgot-password">Esqueceu a palavra-passe ?</a>'
+                    }
+            );
+        }
+    });
+
+</script>
