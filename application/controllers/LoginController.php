@@ -31,7 +31,7 @@ class LoginController extends Zend_Controller_Action {
                         Zend_Session::rememberMe(31536000);
                     }
                     $zendAuthStorage = Zend_Auth::getInstance()->getStorage();
-                    $zendAuthStorage->write();
+                    $zendAuthStorage->write($resultObject);
                 }
                 $this->_helper->json->sendJson($response['response']);
             } catch (Exception $e) {

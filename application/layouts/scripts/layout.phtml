@@ -25,56 +25,64 @@
     <body>
 
         <script>
+
             Ext.onReady(function() {
-                var Layout = Ext.create('Ext.panel.Panel', {
+
+                App = Ext.application(
+                        {
+                            appFolder: '/js/ext-js/app',
+                            autoCreateViewPort: true,
+                            name: 'App'
+                        }
+                );
+
+                Layout = Ext.create('Ext.container.Viewport', {
                     autoShow: true,
                     border: false,
-                    layout: 'hbox',
+                    flex: 1,
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
                     renderTo: Ext.getBody(),
                     items: [
                         {
                             xtype: 'toolbar',
-                            flex: 1,
+                            border: 0,
                             height: 60,
-                            padding: '0 10',
+//                            padding: '0 10',
                             defaults: {
                                 scale: 'medium'
                             },
                             items: [
+//                                {
+//                                    xtype: 'box',
+//                                    html: '<img src="/img/logo.png" width="100">',
+//                                    height: 60,
+//                                    width: 120
+//                                },
                                 {
-                                    xtype: 'box',
-                                    html: '<img src="/img/logo.png" width="100">',
-                                    height: 60,
-                                    width: 120
-                                },
-                                {
-                                    xtype: 'splitbutton',
+                                    xtype: 'button',
                                     text: 'Campanhãs'
                                 },
                                 {
-                                    xtype: 'splitbutton',
+                                    xtype: 'button',
                                     text: 'Formulários'
                                 },
                                 {
-                                    xtype: 'splitbutton',
+                                    xtype: 'button',
                                     text: 'Listas'
                                 },
                                 {
-                                    xtype: 'splitbutton',
+                                    xtype: 'button',
                                     text: 'Relatórios'
                                 },
                                 {
                                     text: 'Ajuda'
                                 },
-                                // begin using the right-justified button container
-                                '->', // same as { xtype: 'tbfill' }
+                                '->',
                                 {
                                     xtype: 'button',
-                                    text: 'cenas'
-                                },
-                                '-',
-                                {
-                                    xtype: 'splitbutton',
                                     text: 'A minha conta',
                                     menu: new Ext.menu.Menu({
                                         border: false,
@@ -82,11 +90,21 @@
                                         items: [
                                             // these will render as dropdown menu items when the arrow is clicked:
                                             {
-                                                text: 'Alterar palavra-passe'
+                                                text: 'Alterar definições de conta',
+                                                handler: function() {
+                                                    var controller = App.app.loadController('Account');
+                                                }
                                             },
                                             {
+                                                text: 'Alterar palavra-passe',
+                                                handler: function() {
+                                                    App.app.getController('Account').password();
+                                                }
+                                            },
+                                            '-',
+                                            {
                                                 text: 'Sair',
-                                                handler:function() {
+                                                handler: function() {
                                                     window.location = '/logout';
                                                 }
                                             }

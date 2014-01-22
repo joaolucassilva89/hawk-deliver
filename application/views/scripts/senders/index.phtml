@@ -1,0 +1,149 @@
+<script>
+
+    Ext.Loader.setConfig({enabled: true});
+
+    Ext.Loader.setPath('Ext.ux', '/js/ext-js/examples/ux/');
+    Ext.require([
+        'Ext.grid.*',
+        'Ext.data.*',
+        'Ext.util.*',
+        'Ext.toolbar.Paging',
+        'Ext.ux.grid.FiltersFeature',
+        'Ext.ux.PreviewPlugin',
+        'Ext.ux.ProgressBarPager',
+        'Ext.ModelManager',
+        'Ext.tip.QuickTipManager'
+    ]);
+
+    Ext.onReady(function() {
+
+        var reader = new Ext.data.JsonReader({
+            root: 'results',
+            totalProperty: 'total',
+            id: 'sender_id'
+        }, [
+            {name: 'id', type: 'integer', mapping: 'id'},
+            {name: 'confirmed', type: 'integer', mapping: 'confirmed'},
+            {name: 'email', type: 'string', mapping: 'email'},
+            {name: 'name', type: 'string', mapping: 'name'}
+        ]
+                );
+
+        // create the Data Store
+        var store = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '/senders/list',
+                reader: reader
+            }
+        });
+
+        var Grid1Store = new Ext.data.JsonStore({
+            fields: ['id', 'name', 'email'],
+            autoLoad: true,
+            data: [
+                {"id": 1, "name": "John Smith", "email": "jsmith@example.com"},
+                {"id": 2, "name": "Anna Smith", "email": "asmith@example.com"},
+                {"id": 3, "name": "Peter Smith", "email": "psmith@example.com"},
+                {"id": 4, "name": "Tom Smith", "email": "tsmith@example.com"},
+                {"id": 5, "name": "Andy Smith", "email": "asmith@example.com"},
+                {"id": 6, "name": "Nick Smith", "email": "nsmith@example.com"}
+            ]
+        });
+
+        var filters = {
+            ftype: 'filters',
+            encode: true, // json encode the filter query
+            local: true, // defaults to false (remote filtering)
+            filters: [{
+                    type: 'boolean',
+                    dataIndex: 'visible'
+                }]
+        };
+
+        var store = new Ext.data.JsonStore({
+            autoLoad: true,
+            fields: ['id', 'confirmed', 'email', 'name'],
+            pageSize: 10,
+            proxy: {
+                type: 'ajax',
+                url: '/senders/list',
+                reader: {
+                    root: 'results',
+                    id: 'sender_id',
+                    totalProperty: 'total'
+                }
+            }
+
+        });
+
+        // create the grid
+        SendersGrid = Ext.create('Ext.grid.Panel', {
+            store: store,
+            features: [filters],
+            flex: 1,
+            viewConfig: {
+                loadingText: 'A carregar...'
+            },
+            columns: [
+                {
+                    text: 'Confirmado',
+                    dataIndex: 'confirmed',
+                    filterable: true,
+                    menuDisabled: false,
+                    resizable: false,
+                    sortable: false,
+                    width: 200
+                },
+                {
+                    text: 'Endereço de e-mail',
+                    dataIndex: 'email',
+                    filterable: true,
+                    flex: 1,
+                    menuDisabled: false,
+                    resizable: false,
+                    sortable: false
+                },
+                {
+                    text: 'Nome',
+                    dataIndex: 'name',
+                    filterable: true,
+                    flex: 1,
+                    menuDisabled: false,
+                    resizable: false,
+                    sortable: false
+                }
+            ],
+            bbar: {
+                xtype: 'pagingtoolbar',
+                pageSize: 10,
+                store: store,
+                displayInfo: true,
+                plugins: new Ext.ux.ProgressBarPager()
+            },
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    items: [
+                        {
+                            text: 'Adicionar remetente',
+                            handler: function() {
+                                App.app.getController('Senders').create();
+                            }
+                        }
+                    ]
+                }
+            ],
+            padding: 20,
+            stripeRows: true,
+            titleAlign: 'left',
+            title: 'Remetentes',
+            xtype: 'progress-bar-pager'
+        });
+
+        Layout.add(SendersGrid);
+
+    });
+
+</script>

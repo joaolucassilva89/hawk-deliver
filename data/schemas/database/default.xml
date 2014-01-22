@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database>
+<database name="hawk_delivery" character_set="utf8" collate="utf8_general_ci">
     <!-- tables -->
     <tables>
         <!-- users -->

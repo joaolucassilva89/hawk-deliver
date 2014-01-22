@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="user_" character_set="utf8" collate="utf8_general_ci">
+<database name="user_1" character_set="utf8" collate="utf8_general_ci">
     <!-- tables -->
     <tables>
-        <!-- users -->
-        <table name="users" primary="user_id">
+        <!-- lists -->
+        <table name="lists" primary="list_id">
             <fields>
-                <field column="user_id" type="BIGINT" length="20" extra="auto_increment"/>
-                <field column="active" type="TINYINT" length="1" default="0"/>
-                <field column="created_at" type="DATETIME"/>
+                <field column="list_id" type="BIGINT" length="20" extra="auto_increment"/>
+                <field column="title" type="VARCHAR" length="50"/>
+            </fields>
+        </table>
+        <!-- senders -->
+        <table name="senders" primary="sender_id">
+            <fields>
+                <field column="sender_id" type="BIGINT" length="20" extra="auto_increment"/>
+                <field column="confirmed" type="TINYINT" length="1"/>
                 <field column="email" type="VARCHAR" length="255"/>
-                <field column="password" type="CHAR" length="40"/>
-                <field column="password_salt" type="CHAR" length="40"/>
-                <field column="token_verification" type="CHAR" length="40"/>
-                <field column="username" type="VARCHAR" length="15"/>
+                <field column="name" type="VARCHAR" length="50"/>
             </fields>
         </table>
     </tables>
