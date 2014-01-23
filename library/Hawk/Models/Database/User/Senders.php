@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Senders extends Zend_Db_Table {
+class Hawk_Models_Database_User_Senders extends Zend_Db_Table {
 
     protected $_name = 'senders';
     protected $_primary = 'sender_id';

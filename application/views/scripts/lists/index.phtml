@@ -1,7 +1,115 @@
-<?php
+<script>
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+    Ext.Loader.setConfig({enabled: true});
+
+    Ext.Loader.setPath('Ext.ux', '/js/ext-js/examples/ux/');
+    Ext.require([
+        'Ext.grid.*',
+        'Ext.data.*',
+        'Ext.util.*',
+        'Ext.toolbar.Paging',
+        'Ext.ux.grid.FiltersFeature',
+        'Ext.ux.PreviewPlugin',
+        'Ext.ux.ProgressBarPager',
+        'Ext.ModelManager',
+        'Ext.tip.QuickTipManager'
+    ]);
+
+    Ext.onReady(function() {
+
+        var filters = {
+            ftype: 'filters',
+            encode: true, // json encode the filter query
+            local: false, // defaults to false (remote filtering)
+            filters: [
+                {
+                    type: 'boolean',
+                    dataIndex: 'visible'
+                }
+            ]
+        };
+
+        var store = new Ext.data.JsonStore({
+            autoLoad: true,
+            fields: ['list_id', 'title', 'subscribers_count', 'subscribers_inactive', 'subscribers_removed', 'subscribers_to_be_confirmed', 'subscribers_waiting_new_confirmation'],
+            pageSize: 1,
+            proxy: {
+                type: 'ajax',
+                url: '/lists/list',
+                reader: {
+                    root: 'rowset',
+                    id: 'list_id',
+                    totalProperty: 'total'
+                },
+                simpleSortMode: true
+            },
+            remoteSort: true
+        });
+
+        SendersGrid = Ext.create('Ext.grid.Panel', {
+            bbar: {
+                xtype: 'pagingtoolbar',
+                store: store,
+                displayInfo: true,
+                plugins: new Ext.ux.ProgressBarPager()
+            },
+            columns: [
+                {
+                    text: 'Título',
+                    dataIndex: 'title',
+                    flex: 1
+                },
+                {
+                    text: 'Subscritores',
+                    columns: [
+                        {
+                            text: 'Total',
+                            align: 'center',
+                            dataIndex: 'subscribers_count',
+                            flex: 1
+                        },
+                        {
+                            text: 'Removidos',
+                            align: 'center',
+                            dataIndex: 'subscribers_removed',
+                            flex: 1
+                        },
+                        {
+                            text: 'Por confirmar',
+                            align: 'center',
+                            dataIndex: 'subscribers_to_be_confirmed',
+                            flex: 1
+                        },
+                        {
+                            text: 'Inativos',
+                            align: 'center',
+                            dataIndex: 'subscribers_inactive',
+                            flex: 1
+                        },
+                        {
+                            text: 'À espera de nova confirmação',
+                            align: 'center',
+                            dataIndex: 'subscribers_waiting_new_confirmation',
+                            flex: 1
+                        }
+                    ],
+                    flex: 1
+                }
+            ],
+            flex: 1,
+            padding: 20,
+            store: store,
+            stripeRows: true,
+            titleAlign: 'left',
+            title: 'Listas de subscritores',
+            viewConfig: {
+                enableTextSelection: true,
+                loadingText: 'A carregar...'
+            }
+        });
+
+        Layout.add(SendersGrid);
+
+    });
+
+</script>

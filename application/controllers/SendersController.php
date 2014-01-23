@@ -30,8 +30,7 @@ class SendersController extends Zend_Controller_Action {
     public function listAction()
     {
         Application_Model_Senders::setDefaultAdapter(Zend_Registry::get('user_db'));
-        $senders = new Application_Model_Senders();
-        $this->_helper->json->sendJson(array('total' => 50, 'results' => $senders->fetchAll()->toArray()));
+        $this->_helper->json->sendJson(Application_Model_Senders::getAll($this->getAllParams()));
     }
 
 }

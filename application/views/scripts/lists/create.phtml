@@ -1,7 +1,137 @@
-<?php
+<script>
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+    Ext.onReady(function() {
+
+        var ListsCreate = Ext.create('Ext.form.Panel', {
+            bodyPadding: 10,
+            defaultType: 'textfield',
+            defaults: {
+                anchor: '100%',
+                msgTarget: 'under',
+                padding: '5px 0'
+            },
+            fieldDefaults: {
+                labelAlign: 'top',
+                labelStyle: 'font-weight:bold',
+                labelSeparator: ':',
+                msgTarget: 'under'
+            },
+            flex: 1,
+            margin: 10,
+            renderTo: Ext.getBody(),
+            title: 'Criar lista de subscritores',
+            url: '/lists/create',
+            waitMsgTarget: true,
+            items: [
+                {
+                    name: 'title',
+                    fieldLabel: 'Título'
+
+                },
+                Ext.create('Ext.form.ComboBox', {
+                    displayField: 'email',
+                    fieldLabel: 'Remetente',
+                    name: 'sender',
+                    queryMode: 'remote',
+                    pageSize: 1,
+                    store: Ext.create('Ext.data.Store',
+                            {
+                                autoLoad: true,
+                                fields: ['email'],
+                                pageSize: 1,
+                                proxy: {
+                                    type: 'ajax',
+                                    url: '/senders/list',
+                                    reader: new Ext.data.JsonReader(
+                                            {
+                                                root: 'rowset',
+                                                id: 'sender_id',
+                                                totalProperty: 'total'
+                                            }
+                                    )
+                                }
+                            }
+                    ),
+                    valueField: 'email'
+                }),
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Telefone',
+                    name: 'phone'
+                },
+                {
+                    xtype: 'fieldset',
+                    defaults: {
+                        anchor: '100%',
+                        hideEmptyLabel: false
+                    },
+                    padding: '0 10 10 10',
+                    title: 'Morada',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Endereço',
+                            name: 'address'
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Código postal',
+                            name: 'postal_code'
+                        },
+                        {
+                            xtype: 'fieldcontainer',
+                            layout: 'hbox',
+                            defaultType: 'textfield',
+                            defaults: {
+                            },
+                            items: [
+                                {
+                                    name: 'city',
+                                    fieldLabel: 'Distrito/Estado',
+                                    flex: 1
+
+                                },
+                                {
+                                    xtype: 'splitter'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: 'Localidade',
+                                    flex: 1,
+                                    name: 'location'
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'País',
+                            name: 'country'
+                        }
+                    ]
+                }
+            ],
+            buttons: [
+                {
+                    xtype: 'button',
+                    flex: 1,
+                    scale: 'medium',
+                    text: 'Criar listas de subscritores',
+                    handler: function() {
+                        /* Normally we would submit the form to the server here and handle the response...*/
+                        ListsCreate.submit({
+                            clientValidation: false,
+                            submitEmptyText: false,
+                            waitMsg: 'Aguarde...',
+                            success: function(form, action) {
+                            },
+                            failure: function(form, action) {
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+        Layout.add(ListsCreate);
+    });
+
+</script>

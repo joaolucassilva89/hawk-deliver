@@ -26,15 +26,15 @@
 
         <script>
 
-            Ext.onReady(function() {
+            App = Ext.application(
+                    {
+                        appFolder: '/js/ext-js/app',
+                        autoCreateViewPort: true,
+                        name: 'App'
+                    }
+            );
 
-                App = Ext.application(
-                        {
-                            appFolder: '/js/ext-js/app',
-                            autoCreateViewPort: true,
-                            name: 'App'
-                        }
-                );
+            Ext.onReady(function() {
 
                 Layout = Ext.create('Ext.container.Viewport', {
                     autoShow: true,
@@ -71,7 +71,10 @@
                                 },
                                 {
                                     xtype: 'button',
-                                    text: 'Listas'
+                                    text: 'Listas',
+                                    handler: function() {
+                                        window.location = '/lists';
+                                    }
                                 },
                                 {
                                     xtype: 'button',
@@ -90,9 +93,14 @@
                                         items: [
                                             // these will render as dropdown menu items when the arrow is clicked:
                                             {
+                                                text: 'Os meus remetentes',
+                                                handler: function() {
+                                                    window.location = '/senders';
+                                                }
+                                            },
+                                            {
                                                 text: 'Alterar definições de conta',
                                                 handler: function() {
-                                                    var controller = App.app.loadController('Account');
                                                 }
                                             },
                                             {

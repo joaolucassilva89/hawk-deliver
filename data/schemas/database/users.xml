@@ -6,6 +6,18 @@
         <table name="lists" primary="list_id">
             <fields>
                 <field column="list_id" type="BIGINT" length="20" extra="auto_increment"/>
+                <field column="sender_id" type="BIGINT" length="20"/>
+                <field column="address" type="VARCHAR" length="100"/>
+                <field column="city" type="VARCHAR" length="100"/>
+                <field column="country" type="BIGINT" length="20"/>
+                <field column="location" type="VARCHAR" length="100"/>
+                <field column="phone" type="VARCHAR" length="100"/>
+                <field column="postal_code" type="VARCHAR" length="100"/>
+                <field column="subscribers_count" type="BIGINT" length="20"/>
+                <field column="subscribers_inactive" type="BIGINT" length="20"/>
+                <field column="subscribers_removed" type="BIGINT" length="20"/>
+                <field column="subscribers_to_be_confirmed" type="BIGINT" length="20"/>
+                <field column="subscribers_waiting_new_confirmation" type="BIGINT" length="20"/>
                 <field column="title" type="VARCHAR" length="50"/>
             </fields>
         </table>
