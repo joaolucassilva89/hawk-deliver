@@ -8,13 +8,13 @@ Ext.define('App.controller.Senders', {
             },
             border: false,
             bodyPadding: 10,
+            defaultFocus: 'name',
             fieldDefaults: {
                 labelAlign: 'top',
                 labelStyle: 'font-weight:bold',
                 labelSeparator: ':',
                 msgTarget: 'under'
             },
-            url: '/senders/create',
             waitMsgTarget: true,
             items: [
                 {
@@ -39,9 +39,11 @@ Ext.define('App.controller.Senders', {
                     text: 'Criar',
                     handler: function() {
                         SendersCreateForm.submit({
-                            clientValidation: false,
+                            clientValidation: true,
                             submitEmptyText: false,
                             waitMsg: 'Aguarde...',
+                            method: 'POST',
+                            url: '/api/senders',
                             success: function(form, action) {
                                 Ext.MessageBox.alert('Sucesso', 'O remetente foi adicionado', function() {
                                     SendersGrid.getStore().load();
@@ -49,6 +51,8 @@ Ext.define('App.controller.Senders', {
                                 });
                             },
                             failure: function(form, action) {
+                                console.log(action);
+                                alert('2');
                             }
                         });
                     }

@@ -99,23 +99,19 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
     private function setResponseFormat(Zend_Controller_Request_Abstract $request)
     {
         $format = false;
-
         // check query string first
         if(in_array($request->getParam('format', 'json'), $this->responseTypes)) {
             $format = $request->getParam('format', 'json');
         } else {
             $bestMimeType = $this->negotiateContentType($request);
-
             // if there's no matching MimeType, assign default XML
             if(!$bestMimeType || $bestMimeType == '*/*') {
                 $bestMimeType = 'application/xml';
             }
-
             $format = $this->responseTypes[$bestMimeType];
         }
         if($format === false or !in_array($format, $this->acceptableFormats)) {
             $request->setParam('format', $this->defaultFormat);
-
             if($request->isOptions() === false) {
                 $request->dispatchError(REST_Response::UNSUPPORTED_TYPE, 'Unsupported Media/Format Type');
             }
@@ -131,14 +127,10 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
     private function handleActions(Zend_Controller_Request_Abstract $request)
     {
         $methods = $this->getReflectionClass($request)->getMethods(ReflectionMethod::IS_PUBLIC);
-
         $actions = array();
-
         foreach($methods as &$method) {
             if($method->getDeclaringClass()->name != 'REST_Controller') {
-
                 $name = strtoupper($method->name);
-
                 if($name == '__CALL' and $method->class != 'Zend_Controller_Action') {
                     $actions[] = $request->getMethod();
                 } elseif(substr($name, -6) == 'ACTION' and $name != 'INDEXACTION') {
@@ -146,14 +138,11 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                 }
             }
         }
-
         if(!in_array('OPTIONS', $actions)) {
             $actions[] = 'OPTIONS';
         }
-
         // Cross-Origin Resource Sharing (CORS)
         $this->_response->setHeader('Access-Control-Allow-Methods', implode(', ', $actions));
-
         if(!in_array(strtoupper($request->getMethod()), $actions)) {
             $request->dispatchError(REST_Response::NOT_ALLOWED, 'Method Not Allowed');
             $this->_response->setHeader('Allow', implode(', ', $actions));
@@ -167,20 +156,16 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
     private function handleRequestBody(Zend_Controller_Request_Abstract $request)
     {
         $header = strtolower($request->getHeader('Content-Type'));
-
         // cleanup the charset part
         $header = current(explode(';', $header));
-
         // detect request body content type
         foreach($this->requestTypes as $contentType) {
             if($header == $contentType) {
                 break;
             }
         }
-
         // extract the raw body
         $rawBody = $request->getRawBody();
-
         // treat these two separately because of the way PHP treats POST
         if(in_array($contentType, array('multipart/form-data', 'application/x-www-form-urlencoded'))) {
             // PHP takes care of everything for us in this case lets just modify the $_FILES array
@@ -192,7 +177,6 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                         $file['content'] = base64_encode($data);
                     }
                 }
-
                 // reset the array pointer
                 unset($file);
             } else {
@@ -200,32 +184,24 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                     case 'application/x-www-form-urlencoded':
                         parse_str($rawBody, $_POST);
                         break;
-
                     // this is wher the magic happens
                     // creates the $_FILES array for none POST requests
                     case 'multipart/form-data':
                         // extract the boundary
                         parse_str(end(explode(';', $request->getHeader('Content-Type'))));
-
                         if(isset($boundary)) {
                             // get rid of the boundary at the edges
                             if(preg_match(sprintf('/--%s(.+)--%s--/s', $boundary, $boundary), $rawBody, $regs)) {
-
                                 // split into chuncks
                                 $chunks = explode('--'.$boundary, trim($regs[1]));
-
                                 foreach($chunks as $chunk) {
                                     // parse each chunk
                                     if(preg_match('/Content-Disposition: form-data; name="(?P<name>.+?)"(?:; filename="(?P<filename>.+?)")?(?P<headers>(?:\\r|\\n)+?.+?(?:\\r|\\n)+?)?(?P<data>.+)/si', $chunk, $regs)) {
-
                                         // dedect a file upload
                                         if(!empty($regs['filename'])) {
-
                                             // put aside for further analysis
                                             $data = $regs['data'];
-
                                             $headers = $this->parseHeaders($regs['headers']);
-
                                             // set our params variable
                                             $_FILES[$regs['name']] = array(
                                                 'name' => $regs['filename'],
@@ -244,7 +220,6 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                         break;
                 }
             }
-
             $request->setParams($_POST + $_FILES);
         } elseif(!empty($rawBody)) {
             // seems like we are dealing with an encoded request
@@ -255,24 +230,20 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                     case 'application/javascript':
                         $_POST = (array) Zend_Json::decode($rawBody, Zend_Json::TYPE_OBJECT);
                         break;
-
                     case 'text/xml':
                     case 'application/xml':
                         $json = @Zend_Json::fromXml($rawBody);
                         $_POST = (array) Zend_Json::decode($json, Zend_Json::TYPE_OBJECT)->request;
                         break;
-
                     case 'text/php':
                     case 'application/x-httpd-php':
                     case 'application/x-httpd-php-source':
                         $_POST = (array) unserialize($rawBody);
                         break;
-
                     default:
                         $_POST = (array) $rawBody;
                         break;
                 }
-
                 $request->setParams($_POST);
             } catch(Exception $e) {
                 $request->dispatchError(REST_Response::BAD_REQUEST, 'Invalid Payload Format');
@@ -294,11 +265,9 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                 return false;
             // ... load controller class
             $className = $this->dispatcher->loadClass($controller);
-
             // extract the actions through reflection
             $this->reflectionClass = new ReflectionClass($className);
         }
-
         return $this->reflectionClass;
     }
 
@@ -325,7 +294,6 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
         if(function_exists('http_parse_headers')) {
             return http_parse_headers($header);
         }
-
         $retVal = array();
         $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
         foreach($fields as $field) {
@@ -338,7 +306,6 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
                 }
             }
         }
-
         return $retVal;
     }
 
@@ -351,21 +318,15 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
         if(function_exists('http_negotiate_content_type')) {
             return http_negotiate_content_type(array_keys($this->responseTypes));
         }
-
         $string = $request->getHeader('Accept');
-
         $mimeTypes = array();
-
         // Accept header is case insensitive, and whitespace isn't important
         $string = strtolower(str_replace(' ', '', $string));
-
         // divide it into parts in the place of a ","
         $types = explode(',', $string);
-
         foreach($types as $type) {
             // the default quality is 1.
             $quality = 1;
-
             // check if there is a different quality
             if(strpos($type, ';q=')) {
                 // divide "mime/type;q=X" into two parts: "mime/type" / "X"
@@ -373,16 +334,13 @@ class REST_Controller_Plugin_RestHandler extends Zend_Controller_Plugin_Abstract
             } elseif(strpos($type, ';')) {
                 list($type, ) = explode(';', $type);
             }
-
             // WARNING: $q == 0 means, that mime-type isn't supported!
             if(array_key_exists($type, $this->responseTypes) and !array_key_exists($quality, $mimeTypes)) {
                 $mimeTypes[$quality] = $type;
             }
         }
-
         // sort by quality descending
         krsort($mimeTypes);
-
         return current(array_values($mimeTypes));
     }
 

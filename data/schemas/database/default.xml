@@ -7,6 +7,7 @@
             <fields>
                 <field column="user_id" type="BIGINT" length="20" extra="auto_increment"/>
                 <field column="active" type="TINYINT" length="1" default="0"/>
+                <field column="apikey" type="CHAR" length="40"/>
                 <field column="created_at" type="DATETIME"/>
                 <field column="email" type="VARCHAR" length="255"/>
                 <field column="password" type="CHAR" length="40"/>

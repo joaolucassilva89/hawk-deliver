@@ -32,24 +32,18 @@
         var store = new Ext.data.JsonStore({
             autoLoad: true,
             fields: ['id', 'confirmed', 'email', 'name'],
-            pageSize: 20,
+            pageSize: 1,
             proxy: {
                 type: 'ajax',
-                url: '/senders/list',
+                url: '/api/senders',
                 reader: {
-                    root: 'rowset',
+                    root: 'data.items',
                     id: 'sender_id',
-                    totalProperty: 'total'
+                    totalProperty: 'data.totalItems'
                 },
                 simpleSortMode: true
             },
-            remoteSort: true,
-            sorters: [
-                {
-                    property: 'email',
-                    direction: 'DESC'
-                }
-            ]
+            remoteSort: true
         });
 
         // create the grid

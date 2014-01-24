@@ -1,10 +1,24 @@
 <?php
+
 /**
  * REST Controller default actions
  *
  */
-abstract class REST_Controller extends Zend_Controller_Action
-{
+abstract class REST_Controller extends Zend_Controller_Action {
+
+    public function init()
+    {
+        $apikey = (string) $this->getParam('apikey', '');
+        $this->auth = Zend_Auth::getInstance();
+        if($this->auth->hasIdentity()) {
+            Zend_Registry::set('apikey', $this->auth->getIdentity()->apikey);
+        } else if(Hawk_Models_Database_Default_Users::checkIfApiKeyIsValid($apikey)){
+            Zend_Registry::set('apikey', $apikey);
+        } else {
+        }
+        Zend_Db_Table::setDefaultAdapter(Zend_Registry::get('user_db'));
+    }
+
     /**
      * The index action handles index/list requests; it should respond with a
      * list of the requested resources.
@@ -79,4 +93,5 @@ abstract class REST_Controller extends Zend_Controller_Action
         $this->_response->setBody(null);
         $this->_response->notAllowed();
     }
+
 }

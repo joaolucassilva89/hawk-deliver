@@ -201,4 +201,11 @@ class Hawk_Models_Database_Default_Users extends Zend_Db_Table {
         return array('auth_adapter' => $authAdapter, 'response' => $response);
     }
 
+    public static function checkIfApiKeyIsValid($arg = '')
+    {
+        $arg = (string) $arg;
+        $instance = new self;
+        return array('success' => $instance->fetchRow(array('apikey = ?' => $arg)) instanceof Zend_Db_Table_Row);
+    }
+
 }

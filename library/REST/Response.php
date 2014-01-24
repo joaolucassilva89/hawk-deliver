@@ -1,63 +1,107 @@
 <?php
+
 /**
  * provides named constants for
  * HTTP protocol status codes.
  *
  */
-
-class REST_Response extends Zend_Controller_Response_Http
-{
+class REST_Response extends Zend_Controller_Response_Http {
     // Informational 1xx
-    const HTTP_CONTINUE         = 100;
-    const SWITCH_PROTOCOLS      = 101;
+
+    const HTTP_CONTINUE = 100;
+    const SWITCH_PROTOCOLS = 101;
 
     // Successful 2xx
-    const OK                    = 200;
-    const CREATED               = 201;
-    const ACCEPTED              = 202;
-    const NONAUTHORITATIVE      = 203;
-    const NO_CONTENT            = 204;
-    const RESET_CONTENT         = 205;
-    const PARTIAL_CONTENT       = 206;
+    const OK = 200;
+    const CREATED = 201;
+    const ACCEPTED = 202;
+    const NONAUTHORITATIVE = 203;
+    const NO_CONTENT = 204;
+    const RESET_CONTENT = 205;
+    const PARTIAL_CONTENT = 206;
 
     // Redirection 3xx
-    const MULTIPLE_CHOICES      = 300;
-    const MOVED_PERMANENTLY     = 301;
-    const FOUND                 = 302;
-    const SEE_OTHER             = 303;
-    const NOT_MODIFIED          = 304;
-    const USE_PROXY             = 305;
+    const MULTIPLE_CHOICES = 300;
+    const MOVED_PERMANENTLY = 301;
+    const FOUND = 302;
+    const SEE_OTHER = 303;
+    const NOT_MODIFIED = 304;
+    const USE_PROXY = 305;
     // 306 is deprecated but reserved
-    const TEMP_REDIRECT         = 307;
+    const TEMP_REDIRECT = 307;
 
     // Client Error 4xx
-    const BAD_REQUEST           = 400;
-    const UNAUTHORIZED          = 401;
-    const PAYMENT_REQUIRED      = 402;
-    const FORBIDDEN             = 403;
-    const NOT_FOUND             = 404;
-    const NOT_ALLOWED           = 405;
-    const NOT_ACCEPTABLE        = 406;
-    const PROXY_AUTH_REQUIRED   = 407;
-    const REQUEST_TIMEOUT       = 408;
-    const CONFLICT              = 409;
-    const GONE                  = 410;
-    const LENGTH_REQUIRED       = 411;
-    const PRECONDITION_FAILED   = 412;
-    const LARGE_REQUEST_ENTITY  = 413;
-    const LONG_REQUEST_URI      = 414;
-    const UNSUPPORTED_TYPE      = 415;
-    const UNSATISFIABLE_RANGE   = 416;
-    const EXPECTATION_FAILED    = 417;
+    const BAD_REQUEST = 400;
+    const UNAUTHORIZED = 401;
+    const PAYMENT_REQUIRED = 402;
+    const FORBIDDEN = 403;
+    const NOT_FOUND = 404;
+    const NOT_ALLOWED = 405;
+    const NOT_ACCEPTABLE = 406;
+    const PROXY_AUTH_REQUIRED = 407;
+    const REQUEST_TIMEOUT = 408;
+    const CONFLICT = 409;
+    const GONE = 410;
+    const LENGTH_REQUIRED = 411;
+    const PRECONDITION_FAILED = 412;
+    const LARGE_REQUEST_ENTITY = 413;
+    const LONG_REQUEST_URI = 414;
+    const UNSUPPORTED_TYPE = 415;
+    const UNSATISFIABLE_RANGE = 416;
+    const EXPECTATION_FAILED = 417;
 
     // Server Error 5xx
-    const SERVER_ERROR          = 500;
-    const NOT_IMPLEMENTED       = 501;
-    const BAD_GATEWAY           = 502;
-    const UNAVAILABLE           = 503;
-    const GATEWAY_TIMEOUT       = 504;
-    const UNSUPPORTED_VERSION   = 505;
-    const BANDWIDTH_EXCEEDED    = 509;
+    const SERVER_ERROR = 500;
+    const NOT_IMPLEMENTED = 501;
+    const BAD_GATEWAY = 502;
+    const UNAVAILABLE = 503;
+    const GATEWAY_TIMEOUT = 504;
+    const UNSUPPORTED_VERSION = 505;
+    const BANDWIDTH_EXCEEDED = 509;
+
+    public function getStatus()
+    {
+        switch((int) $this->getHttpResponseCode()) {
+            case REST_Response::OK:
+            case REST_Response::CREATED:
+            case REST_Response::NONAUTHORITATIVE:
+            case REST_Response::NO_CONTENT:
+            case REST_Response::RESET_CONTENT:
+            case REST_Response::PARTIAL_CONTENT:
+                return 'success';
+                break;
+            case REST_Response::BAD_REQUEST:
+            case REST_Response::UNAUTHORIZED:
+            case REST_Response::PAYMENT_REQUIRED:
+            case REST_Response::FORBIDDEN:
+            case REST_Response::NOT_FOUND:
+            case REST_Response::NOT_ALLOWED:
+            case REST_Response::NOT_ACCEPTABLE:
+            case REST_Response::PROXY_AUTH_REQUIRED:
+            case REST_Response::REQUEST_TIMEOUT:
+            case REST_Response::CONFLICT:
+            case REST_Response::GONE:
+            case REST_Response::LENGTH_REQUIRED:
+            case REST_Response::PRECONDITION_FAILED:
+            case REST_Response::LARGE_REQUEST_ENTITY:
+            case REST_Response::LONG_REQUEST_URI:
+            case REST_Response::UNSUPPORTED_TYPE:
+            case REST_Response::UNSATISFIABLE_RANGE:
+            case REST_Response::EXPECTATION_FAILED:
+                return 'error';
+                break;
+            case REST_Response::SERVER_ERROR:
+            case REST_Response::NOT_IMPLEMENTED:
+            case REST_Response::BAD_GATEWAY:
+            case REST_Response::UNAVAILABLE:
+            case REST_Response::GATEWAY_TIMEOUT:
+            case REST_Response::UNSUPPORTED_VERSION:
+            case REST_Response::BANDWIDTH_EXCEEDED:
+                return 'error';
+                break;
+        }
+        return 'error';
+    }
 
     // Informational 1xx
     function httpContinue()
@@ -269,7 +313,6 @@ class REST_Response extends Zend_Controller_Response_Http
         $this->setHttpResponseCode(self::BANDWIDTH_EXCEEDED);
     }
 
-
     /**
      * Return header value (if set); see {@link $_headers} for format
      *
@@ -277,13 +320,15 @@ class REST_Response extends Zend_Controller_Response_Http
      */
     public function getHeaderValue($name)
     {
-        foreach ($this->_headers as $key => $header) {
-            if ($name == $header['name']) {
+        foreach($this->_headers as $key => $header) {
+            if($name == $header['name']) {
                 return $header['value'];
             }
         }
 
         return false;
     }
+
 }
+
 ?>

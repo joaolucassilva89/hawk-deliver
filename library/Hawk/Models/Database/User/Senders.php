@@ -5,45 +5,29 @@ class Hawk_Models_Database_User_Senders extends Zend_Db_Table {
     protected $_name = 'senders';
     protected $_primary = 'sender_id';
 
-    public static function create($email = '', $name = '')
+    public static function create($args = array())
     {
-        /**/
-        if(!Zend_Registry::isRegistered('user_db')) {
-            throw new Exception('user db is not registered');
-        }
-        /**/
-        Application_Model_Senders::setDefaultAdapter(Zend_Registry::get('user_db'));
-        /* Check if email is a string */
-        if(!is_string($email)) {
-            throw new Exception('$email must be string');
-        }
-        /* Check if name is a string */
-        if(!is_string($name)) {
-            throw new Exception('$name must be string');
-        }
-        /**/
-        $errors = array();
         /* Filters */
         $filterStringTrim = new Zend_Filter_StringTrim();
         /* Filter email|name */
-        $email = $filterStringTrim->filter($email);
-        $name = $filterStringTrim->filter($name);
+        $args['email'] = $filterStringTrim->filter($args['email']);
+        $args['name'] = $filterStringTrim->filter($args['name']);
         /* Validators */
         $nameStringLengthValidator = new Zend_Validate_StringLength(array('min' => 2, 'max' => 50));
         $emailStringLengthValidator = new Zend_Validate_StringLength(array('max' => 255));
         $emailEmailValidator = new Zend_Validate_EmailAddress();
         $emailDbNoRecordExistsValidator = new Zend_Validate_Db_NoRecordExists(array('table' => 'senders', 'field' => 'email'));
         /* Validate name */
-        if(!$nameStringLengthValidator->isValid($name)) {
-            $errors['name'] = 'SENDER_ERROR_NAME_INVALID_LENGTH';
+        if(!$nameStringLengthValidator->isValid($args['name'])) {
+            $errors['name'] = 'INVALID_LENGTH';
         }
         /* Validate email */
         if(!$emailStringLengthValidator) {
-            $errors['email'] = 'SENDER_ERROR_EMAIL_INVALID_LENGTH';
-        } else if(!$emailEmailValidator->isValid($email)) {
-            $errors['email'] = 'SENDER_ERROR_EMAIL_INVALID_FORMAT';
-        } else if(!$emailDbNoRecordExistsValidator->isValid($email)) {
-            $errors['email'] = 'SENDER_ERROR_EMAIL_ALREADY_TAKEN';
+            $errors['email'] = 'INVALID_LENGTH';
+        } else if(!$emailEmailValidator->isValid($args['email'])) {
+            $errors['email'] = 'INVALID_FORMAT';
+        } else if(!$emailDbNoRecordExistsValidator->isValid($args['email'])) {
+            $errors['email'] = 'ALREADY_TAKEN';
         }
         /**/
         if(!empty($errors)) {
@@ -51,16 +35,13 @@ class Hawk_Models_Database_User_Senders extends Zend_Db_Table {
         }
         /**/
         $instance = new self;
-        $instance->insert(array('email' => $email, 'name' => $name));
+        $instance->insert(array('email' => $args['email'], 'name' => $args['name']));
         return array('success' => true);
     }
 
     public static function getAll($args = array())
     {
-        /**/
-        if(!is_array($args)) {
-            throw new Exception('$args must be an array');
-        }
+        $args = (array) $args;
         /**/
         $args['dir'] = empty($args['dir']) ? '' : strtolower((string) $args['dir']);
         $args['limit'] = empty($args['limit']) ? 1 : (int) $args['limit'];
@@ -87,9 +68,9 @@ class Hawk_Models_Database_User_Senders extends Zend_Db_Table {
         /**/
         $paginator = new Zend_Paginator($adapter);
         /**/
-        $paginator->setCurrentPageNumber($args['page'])->setItemCountPerPage(1);
+        $paginator->setCurrentPageNumber($args['page'])->setItemCountPerPage(20);
         /**/
-        return array('total' => $paginator->getTotalItemCount(), 'rowset' => $paginator->getCurrentItems()->toArray());
+        return array('totalItems' => $paginator->getTotalItemCount(), 'items' => $paginator->getCurrentItems()->toArray());
     }
 
 }

@@ -3,7 +3,7 @@
 /**
  *  Sample Foo Resource
  */
-class Api_FooController extends REST_Controller {
+class Api_SendersController extends REST_Controller {
 
     /**
      * The index action handles index/list requests; it should respond with a
@@ -11,7 +11,7 @@ class Api_FooController extends REST_Controller {
      */
     public function indexAction()
     {
-        $this->view->message = 'indexAction has been called.';
+        $this->view->data = Hawk_Models_Database_User_Senders::getAll($this->getAllParams());
         $this->_response->ok();
     }
 
@@ -45,9 +45,9 @@ class Api_FooController extends REST_Controller {
      */
     public function postAction()
     {
-        $this->view->params = $this->_request->getParams();
-        $this->view->message = 'Resource Created';
-        $this->_response->created();
+        $this->view->data = Hawk_Models_Database_User_Senders::create($this->getAllParams());
+        $this->view->success = true;
+        $this->_response->ok();
     }
 
     /**
